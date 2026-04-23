@@ -1,73 +1,72 @@
-# React + TypeScript + Vite
+# 🚀 LightCloud – Lightweight Self‑Hosted Cloud Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**LightCloud** is a lightweight, self‑hosted alternative to Vercel / Render that turns your personal laptops into a scalable cloud platform. It supports static sites, serverless functions, and multi‑node distributed deployments with automatic failover – all running on your own hardware.
 
-Currently, two official plugins are available:
+> Built with **Java 17+**, **Netty**, **SQLite**, and **ngrok/Cloudflare Tunnel**.  
+> AI‑assisted development using **OpenCode** and **Claude**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🟢 Beginner Server
+- Deploy static websites (HTML/CSS/JS) from a local folder.
+- Automatic public URL via **ngrok** or **Cloudflare Tunnel**.
+- CLI and web upload.
 
-## Expanding the ESLint configuration
+### 🟡 Standard Server
+- Upload **frontend** (static) + **backend** (Node.js/Python functions) separately.
+- Built‑in reverse proxy routes `/api/*` to backend, everything else to frontend.
+- Single public URL for full‑stack apps.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🔴 Distributed Server
+- Connect up to **3 external laptops** as worker nodes.
+- Deploy the same app to all workers.
+- **Load balancer** distributes traffic among healthy workers.
+- **Health checks** and **failover** – if a worker dies, traffic shifts automatically.
+- **Kill switch** to simulate failure and demonstrate resilience.
+- Works across a local network (WiFi/Ethernet).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 🧩 General Features
+- **Deployment Management**: Stop, restart, or delete deployments from a web dashboard.
+- **Active/Inactive Status**: Server cards show real‑time deployment status.
+- **Persistence**: Deployment metadata stored in SQLite – survives reboots.
+- **Cross‑Platform**: Runs on Windows, macOS, Linux.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🏗️ Architecture Overview
+┌─────────────────────────────────────────────────────────────┐
+│ Control Node (Main Laptop) │
+│ ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐ │
+│ │ UI (HTML) │ │ LoadBalancer│ │ HealthChecker │ │
+│ │ /distributed│ │ (port 8090) │ │ (scheduled thread) │ │
+│ └──────┬──────┘ └──────┬──────┘ └──────────┬──────────┘ │
+│ │ │ │ │
+│ └────────────────┼─────────────────────┘ │
+│ │ │
+│ ┌─────▼─────┐ │
+│ │ Worker │ │
+│ │ Registry │ │
+│ └─────┬─────┘ │
+└──────────────────────────┼──────────────────────────────────┘
+│ HTTP
+┌─────────────────┼─────────────────┐
+│ │ │
+┌────▼────┐ ┌────▼────┐ ┌────▼────┐
+│ Worker1 │ │ Worker2 │ │ Worker3 │
+│ Agent │ │ Agent │ │ Agent │
+└─────────┘ └─────────┘ └─────────┘
+- **Control Node** – Main application (dashboard, API, orchestrator, load balancer).
+- **Worker Agent** – Lightweight Java process running on each laptop; receives deployments, runs sites, reports health.
+- **Tunnel** – ngrok or Cloudflare Tunnel exposes the load balancer to the internet.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📦 Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Prerequisites
+- **Java 17+** (JDK)
+- **Maven** (for building)
+- **ngrok** or **cloudflared** (for public URLs) – [download ngrok](https://ngrok.com/download) or [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation)
+
